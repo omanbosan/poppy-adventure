@@ -53,6 +53,27 @@ html,body{
 #overlay.hidden{display:none;}
 #overlay h1{font-size:26px;color:#f5a623;text-shadow:3px 3px 0 #000;line-height:1.2;}
 #overlay p{font-size:13px;line-height:1.8;max-width:310px;}
+#loginScreen{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+  background:#0a0018;color:#fff;text-align:center;padding:24px;z-index:300;
+}
+#loginScreen.hidden{display:none;}
+#loginScreen h1{font-size:28px;color:#f5a623;text-shadow:3px 3px 0 #000;}
+#loginScreen p{font-size:13px;color:#aaa;}
+#pwInput{
+  padding:12px 20px;font-size:18px;border-radius:10px;border:2px solid #f5a623;
+  background:#1a0a2e;color:#fff;text-align:center;width:220px;outline:none;
+  letter-spacing:4px;
+}
+#pwInput:focus{border-color:#ffcc00;}
+#pwError{color:#ff4444;font-size:13px;min-height:18px;transition:opacity 0.3s;}
+#loginBtn{
+  padding:12px 36px;background:#f5a623;color:#1a0a2e;
+  font-size:18px;font-weight:bold;border:none;border-radius:10px;
+  cursor:pointer;box-shadow:0 5px 0 #a06000;touch-action:manipulation;
+}
+#loginBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #a06000;}
 .ovl-btn{
   padding:12px 32px;background:#f5a623;color:#1a0a2e;
   font-size:18px;font-weight:bold;border:none;border-radius:10px;
@@ -95,6 +116,13 @@ html,body{
     </div>
   </div>
 </div>
+<div id="loginScreen">
+  <h1>🐣 ポッピーアドベンチャー 🐲</h1>
+  <p>パスワードを入力してください</p>
+  <input type="password" id="pwInput" placeholder="••••••" maxlength="20" autocomplete="off">
+  <div id="pwError"></div>
+  <button id="loginBtn">ログイン</button>
+</div>
 <div id="overlay">
   <h1>🐣 ポッピーアドベンチャー 🐲</h1>
   <p>
@@ -113,6 +141,26 @@ html,body{
 // ═══════════════════════════════════════════════════════
 //  CANVAS
 // ═══════════════════════════════════════════════════════
+// ログイン処理
+(function(){
+  const screen=document.getElementById('loginScreen');
+  const input=document.getElementById('pwInput');
+  const err=document.getElementById('pwError');
+  const btn=document.getElementById('loginBtn');
+  function attempt(){
+    if(input.value==='omanbo'){
+      screen.classList.add('hidden');
+    } else {
+      err.textContent='パスワードが違います';
+      input.value='';
+      input.focus();
+      setTimeout(()=>{err.textContent='';},2000);
+    }
+  }
+  btn.addEventListener('click',attempt);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')attempt();});
+})();
+
 const canvas=document.getElementById('gameCanvas');
 const ctx=canvas.getContext('2d');
 function resize(){const w=Math.min(window.innerWidth,800);canvas.style.width=w+'px';canvas.style.height=(w*0.5)+'px';}
